@@ -28,7 +28,7 @@ use sp_state_machine::{backend::Backend as StateBackend, TrieBackend};
 use log::trace;
 use sc_client_api::backend::{StorageCollection, ChildStorageCollection};
 use std::hash::Hash as StdHash;
-use crate::stats::UsageStats;
+use crate::stats::StateUsageStats;
 
 const STATE_CACHE_BLOCKS: usize = 12;
 
@@ -292,7 +292,7 @@ pub struct CacheChanges<H: Hasher, B: BlockT> {
 /// For non-canonical clones local cache and changes are dropped.
 pub struct CachingState<H: Hasher, S: StateBackend<H>, B: BlockT> {
 	/// Usage statistics
-	usage: UsageStats,
+	usage: StateUsageStats,
 	/// Backing state.
 	state: S,
 	/// Cache data.
@@ -412,7 +412,7 @@ impl<H: Hasher, S: StateBackend<H>, B: BlockT> CachingState<H, S, B> {
 	/// Create a new instance wrapping generic State and shared cache.
 	pub fn new(state: S, shared_cache: SharedCache<B, H>, parent_hash: Option<B::Hash>) -> CachingState<H, S, B> {
 		CachingState {
-			usage: UsageStats::new(),
+			usage: StateUsageStats::new(),
 			state,
 			cache: CacheChanges {
 				shared_cache,
